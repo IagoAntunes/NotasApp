@@ -20,7 +20,15 @@ class AuthContainer extends StatelessWidget {
       listenWhen: (previous, current) => current is IAuthListener,
       onListen: (context, state) {
         if (state is AuthErrorListener) {
-          final snackBar = SnackBar(content: Text(state.message));
+          String message = state.message;
+          if (state.message.isNotEmpty) {
+            if (state.message == 'invalid-credential') {
+              message = 'Credenciais inválidas. Por favor, verifique seu e-mail e senha.';
+            } else {
+              message = 'Credenciais inválidas.';
+            }
+          }
+          final snackBar = SnackBar(content: Text(message));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           controller.resetState();
         }
@@ -35,6 +43,7 @@ class AuthContainer extends StatelessWidget {
 
           return AuthScreen(
             onLoginTap: (email, password) {
+              FocusScope.of(context).unfocus();
               controller.login(email, password);
             },
             onRegisterTap: () {

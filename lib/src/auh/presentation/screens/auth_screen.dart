@@ -141,7 +141,38 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                         ),
                         Spacer(),
-                        Divider(),
+                        Center(
+                          child: Text(
+                            "Ou acesse com",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xff8A8A8A),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: IconButton(
+                            style: IconButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              _emailController.text = 'admin@gmail.com';
+                              _passwordController.text = 'admin123';
+                              _isBtnEnabled.value = _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+                            },
+                            icon: Icon(
+                              Icons.admin_panel_settings_outlined,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Divider(height: 2),
+                        ),
                         Center(
                           child: GestureDetector(
                             onTap: widget.isLoading ? null : widget.onRegisterTap,

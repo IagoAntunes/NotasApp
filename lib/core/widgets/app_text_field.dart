@@ -46,6 +46,11 @@ class AppTextField extends StatefulWidget {
 
 class _AppTextFieldState extends State<AppTextField> {
   bool isObscure = false;
+  @override
+  void initState() {
+    super.initState();
+    isObscure = widget.type == AppTextFieldType.password;
+  }
 
   OutlineInputBorder _border(Color color, {double width = 1.0}) {
     return OutlineInputBorder(

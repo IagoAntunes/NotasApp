@@ -1,11 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:notes_app/src/auh/domain/repository/auth_repository.dart';
+import 'package:notes_app/src/auh/external/datasource/auth_datasource_impl.dart';
+import 'package:notes_app/src/auh/infra/datasource/auth_datasource.dart';
+import 'package:notes_app/src/auh/infra/repository/auth_repository_impl.dart';
 import 'package:notes_app/src/auh/presentation/controller/auth_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../src/auh/presentation/controller/register_controller.dart';
 
 final injector = GetIt.instance;
 
 Future<void> setupInjector() async {
-  injector.registerLazySingleton<AuthController>(() => AuthController());
-  injector.registerLazySingleton<RegisterController>(() => RegisterController());
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final firebaseAuth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+
+  injector.registerSingleton<SharedPreferences>(sharedPreferences);
+  injector.registerFactory<IAuthDataSource>(
+    () => AuthDatasourceImpl(firebaseAuth: firebaseAuth, firestore: firestore),
+  );
+  injector.registerFactory<IAuthRepository>(
+    () => AuthRepositoryImpl(authDataSource: injector(), sharedPreferences: injector()),
+  );
+
+  injector.registerLazySingleton<AuthController>(() => AuthController(authRepository: injector()));
+  injector.registerLazySingleton<RegisterController>(() => RegisterController(authRepository: injector()));
 }

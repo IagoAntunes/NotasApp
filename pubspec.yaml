@@ -39,6 +39,11 @@ dependencies:
   get_it: ^7.6.4
   mobx: ^2.3.0
   flutter_mobx: ^2.2.1
+  firebase_auth: ^6.1.2
+  cloud_firestore: ^6.1.0
+  firebase_core: ^4.2.1
+  dartz: ^0.10.1
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

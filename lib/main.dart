@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/core/styles/app_colors.dart';
 import 'package:notes_app/core/di/injector.dart';
@@ -6,6 +7,7 @@ import 'core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await setupInjector();
   runApp(const MyApp());
 }
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Poppins',
       ),
+      debugShowCheckedModeBanner: false,
       routerConfig: router,
     );
   }

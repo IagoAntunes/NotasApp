@@ -8,11 +8,11 @@ class AuthLoading extends IAuthState {}
 
 class AuthComplete extends IAuthState {}
 
-class AuthErrorListener extends IAuthState {
+class AuthErrorListener extends IAuthListener {
   AuthErrorListener(this.message);
   final String message;
 }
 
-class AuthSuccessLoginListener extends IAuthState {
+class AuthSuccessLoginListener extends IAuthListener {
   AuthSuccessLoginListener();
 }
