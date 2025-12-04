@@ -27,7 +27,7 @@ abstract class _AuthControllerBase with Store {
         state = AuthErrorListener(l.code ?? '');
       },
       (r) {
-        state = AuthComplete();
+        state = AuthSuccessLoginListener();
       },
     );
   }

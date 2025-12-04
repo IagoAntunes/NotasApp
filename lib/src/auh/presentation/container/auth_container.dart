@@ -30,10 +30,10 @@ class AuthContainer extends StatelessWidget {
           }
           final snackBar = SnackBar(content: Text(message));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          controller.resetState();
         }
         if (state is AuthSuccessLoginListener) {
           context.go(AppRoutes.home);
+          controller.resetState();
         }
       },
       child: Observer(

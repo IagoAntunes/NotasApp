@@ -9,6 +9,8 @@ import 'package:notes_app/src/auh/presentation/controller/auth_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../src/auh/presentation/controller/register_controller.dart';
+import '../../src/home/presentation/controller/home_controller.dart';
+import '../../src/home/presentation/controller/note_details_controller.dart';
 
 final injector = GetIt.instance;
 
@@ -27,4 +29,6 @@ Future<void> setupInjector() async {
 
   injector.registerLazySingleton<AuthController>(() => AuthController(authRepository: injector()));
   injector.registerLazySingleton<RegisterController>(() => RegisterController(authRepository: injector()));
+  injector.registerLazySingleton<HomeController>(() => HomeController(authRepository: injector()));
+  injector.registerLazySingleton<NoteDetailsController>(() => NoteDetailsController());
 }

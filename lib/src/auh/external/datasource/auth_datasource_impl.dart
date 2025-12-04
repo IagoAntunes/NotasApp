@@ -64,4 +64,14 @@ class AuthDatasourceImpl implements IAuthDataSource {
       return Future.value(Left(ResultError(code: 'unknown', message: 'Ocorreu um erro inesperado.')));
     }
   }
+
+  @override
+  Future<Either<ResultError, bool>> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+      return Future.value(Right(true));
+    } catch (e) {
+      return Future.value(Left(ResultError(code: 'unknown', message: 'Ocorreu um erro inesperado.')));
+    }
+  }
 }

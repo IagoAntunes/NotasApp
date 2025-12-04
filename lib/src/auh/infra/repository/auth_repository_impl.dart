@@ -39,4 +39,14 @@ class AuthRepositoryImpl implements IAuthRepository {
     }
     return result;
   }
+
+  @override
+  Future<Either<ResultError, bool>> signOut() async {
+    final result = await _authDataSource.signOut();
+    if (result.isRight()) {
+      _sharedPreferences.remove(AppSharedpreferencesKeys.email);
+      _sharedPreferences.setBool(AppSharedpreferencesKeys.isLogged, false);
+    }
+    return result;
+  }
 }
