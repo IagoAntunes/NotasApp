@@ -9,6 +9,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({
     super.key,
     required this.notes,
+    required this.isLoading,
     required this.onTapLogout,
     required this.onTapDocumentation,
     required this.onTapNoteDetails,
@@ -23,6 +24,7 @@ class HomeScreen extends StatelessWidget {
   final Function() onTapCreateNote;
 
   final List<NoteModel> notes;
+  final bool isLoading;
 
   final List<Color> cardColors = [
     Color(0xFFE3F2FD),
@@ -106,64 +108,91 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: MasonryGridView.count(
-                padding: const EdgeInsets.all(8),
-                crossAxisCount: 2,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                itemCount: notes.length,
-                itemBuilder: (context, index) {
-                  final noteColor = cardColors[index % cardColors.length];
-                  final noteTitle = "Nota ${index + 1}";
-
-                  return GestureDetector(
-                    onTap: () => onTapNoteDetails(
-                      noteTitle,
-                      notes[index],
-                      noteColor,
-                      index,
-                    ),
-                    child: Hero(
-                      tag: 'note_$index',
-                      child: Card(
-                        color: noteColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                noteTitle,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                notes[index].text,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                                maxLines: 6,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
+            if (isLoading)
+              const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            else if (notes.isEmpty)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.note_alt_outlined, size: 80, color: Colors.black26),
+                    const SizedBox(height: 24),
+                    Center(
+                      child: Text(
+                        'Nenhuma nota encontrada.\nClique no botão "+" para criar uma nova nota.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black54,
                         ),
                       ),
                     ),
-                  );
-                },
+                  ],
+                ),
+              )
+            else
+              Expanded(
+                child: MasonryGridView.count(
+                  padding: const EdgeInsets.all(8),
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  itemCount: notes.length,
+                  itemBuilder: (context, index) {
+                    final noteColor = cardColors[index % cardColors.length];
+                    final noteTitle = "Nota ${index + 1}";
+
+                    return GestureDetector(
+                      onTap: () => onTapNoteDetails(
+                        noteTitle,
+                        notes[index],
+                        noteColor,
+                        index,
+                      ),
+                      child: Hero(
+                        tag: 'note_$index',
+                        child: Card(
+                          color: noteColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  noteTitle,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  notes[index].text,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                  maxLines: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),

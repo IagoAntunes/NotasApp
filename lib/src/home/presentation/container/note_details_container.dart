@@ -37,6 +37,10 @@ class NoteDetailsContainer extends StatelessWidget {
         if (state is NeedRebuildHomeListener) {
           if (context.mounted) context.pop(true);
         }
+        if (state is NoteDetailsErrorListener) {
+          final snackBar = SnackBar(content: Text('Ocorreu um problema'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       },
       child: Observer(
         builder: (_) {

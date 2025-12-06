@@ -39,6 +39,7 @@ class _HomeContainerState extends State<HomeContainer> {
         builder: (_) {
           return HomeScreen(
             notes: controller.state is HomeComplete ? (controller.state as HomeComplete).notes : [],
+            isLoading: controller.state is HomeLoading,
             onTapDocumentation: () {},
             onTapLogout: () {
               controller.logOut();

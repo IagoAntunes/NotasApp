@@ -115,6 +115,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                           maxLines: null,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
+                            hintText: 'Digite sua nota aqui...',
                           ),
                           style: const TextStyle(
                             fontSize: 18,
