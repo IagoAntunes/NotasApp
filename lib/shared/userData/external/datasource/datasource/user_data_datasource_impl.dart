@@ -13,7 +13,15 @@ class UserDataDatasourceImpl implements IUserDataDatasource {
   @override
   Future<Either<ResultError, List<NoteModel>>> getNotesByUser({required String userId}) async {
     try {
-      final result = await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).get();
+      final result = await _firestore
+          .collection(AppFirestoreCollectionKeys.users)
+          .doc(userId)
+          .collection(AppFirestoreCollectionKeys.notes)
+          .orderBy(
+            'createdAt',
+            descending: false,
+          )
+          .get();
 
       List<NoteModel> notes = [];
       for (var doc in result.docs) {
@@ -41,6 +49,17 @@ class UserDataDatasourceImpl implements IUserDataDatasource {
   Future<Either<ResultError, bool>> updateNote({required NoteModel note, required String userId}) async {
     try {
       await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid).set(note.toMap());
+
+      return Right(true);
+    } catch (e) {
+      return Left(ResultError(message: e.toString(), code: ''));
+    }
+  }
+
+  @override
+  Future<Either<ResultError, bool>> deleteNote({required String uidNote, required String userId}) async {
+    try {
+      await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(uidNote).delete();
 
       return Right(true);
     } catch (e) {

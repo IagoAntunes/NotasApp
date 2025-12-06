@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes_app/core/di/injector.dart';
-import 'package:notes_app/core/router/app_router.dart';
 import 'package:notes_app/core/router/routes.dart';
 import 'package:notes_app/src/home/presentation/controller/home_controller.dart';
 import 'package:notes_app/src/home/presentation/states/home_state.dart';
@@ -51,6 +50,7 @@ class _HomeContainerState extends State<HomeContainer> {
                 'backgroundColor': backgroundColor,
                 'index': index,
                 'uidNote': note.uid,
+                'createdAt': note.createdAt,
               });
 
               if (result == true) {

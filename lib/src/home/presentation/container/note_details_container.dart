@@ -16,6 +16,7 @@ class NoteDetailsContainer extends StatelessWidget {
     required this.backgroundColor,
     required this.index,
     this.creating = false,
+    this.createdAt,
   });
   final String uidNote;
   final String title;
@@ -23,6 +24,7 @@ class NoteDetailsContainer extends StatelessWidget {
   final Color backgroundColor;
   final int index;
   final bool creating;
+  final int? createdAt;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +47,13 @@ class NoteDetailsContainer extends StatelessWidget {
             title: title,
             isCreating: creating,
             onDelete: () {
-              // TODO: implement delete
+              controller.deleteNote(uidNote: uidNote);
             },
             onSave: (value) async {
               if (creating) {
                 await controller.saveNote(text: value);
               } else {
-                await controller.updateNote(text: value, uidNote: uidNote);
+                await controller.updateNote(text: value, uidNote: uidNote, createdAt: createdAt!);
               }
             },
           );

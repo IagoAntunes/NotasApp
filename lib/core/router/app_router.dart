@@ -61,6 +61,7 @@ class AppRouter {
             final int index = args['index'];
             final bool creating = (args['creating'] as bool?) ?? false;
             final String uidNote = (args['uidNote'] as String?) ?? '';
+            final int? createdAt = (args['createdAt'] as int?);
 
             return MaterialPage(
               child: NoteDetailsContainer(
@@ -70,6 +71,7 @@ class AppRouter {
                 index: index,
                 title: title,
                 creating: creating,
+                createdAt: createdAt,
               ),
             );
           },

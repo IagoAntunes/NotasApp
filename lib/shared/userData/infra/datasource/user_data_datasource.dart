@@ -6,4 +6,5 @@ abstract class IUserDataDatasource {
   Future<Either<ResultError, List<NoteModel>>> getNotesByUser({required String userId});
   Future<Either<ResultError, bool>> createNote({required NoteModel note, required String userId});
   Future<Either<ResultError, bool>> updateNote({required NoteModel note, required String userId});
+  Future<Either<ResultError, bool>> deleteNote({required String uidNote, required String userId});
 }

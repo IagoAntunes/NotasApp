@@ -102,7 +102,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                             backgroundColor: Colors.white70,
                             foregroundColor: Colors.black87,
                           ),
-                          onPressed: () {},
+                          onPressed: widget.onDelete,
                           icon: const Icon(Icons.delete_outline),
                         ),
                       ),

@@ -37,9 +37,19 @@ mixin _$NoteDetailsController on _NoteDetailsControllerBase, Store {
       AsyncAction('_NoteDetailsControllerBase.updateNote', context: context);
 
   @override
-  Future<void> updateNote({required String text, required String uidNote}) {
-    return _$updateNoteAsyncAction
-        .run(() => super.updateNote(text: text, uidNote: uidNote));
+  Future<void> updateNote(
+      {required String text, required String uidNote, required int createdAt}) {
+    return _$updateNoteAsyncAction.run(() =>
+        super.updateNote(text: text, uidNote: uidNote, createdAt: createdAt));
+  }
+
+  late final _$deleteNoteAsyncAction =
+      AsyncAction('_NoteDetailsControllerBase.deleteNote', context: context);
+
+  @override
+  Future<void> deleteNote({required String uidNote}) {
+    return _$deleteNoteAsyncAction
+        .run(() => super.deleteNote(uidNote: uidNote));
   }
 
   late final _$_NoteDetailsControllerBaseActionController =

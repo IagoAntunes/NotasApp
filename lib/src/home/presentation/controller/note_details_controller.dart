@@ -28,7 +28,8 @@ abstract class _NoteDetailsControllerBase with Store {
   @action
   Future<void> saveNote({required String text}) async {
     final uid = uuid.v4();
-    final newNote = NoteModel(uid: uid, text: text);
+    final createdAt = DateTime.now().millisecondsSinceEpoch;
+    final newNote = NoteModel(uid: uid, text: text, createdAt: createdAt);
     final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
     final result = await _userDataRepository.createNote(note: newNote, userId: userId!);
     result.fold(
@@ -42,10 +43,24 @@ abstract class _NoteDetailsControllerBase with Store {
   }
 
   @action
-  Future<void> updateNote({required String text, required String uidNote}) async {
-    final updatedNote = NoteModel(uid: uidNote, text: text);
+  Future<void> updateNote({required String text, required String uidNote, required int createdAt}) async {
+    final updatedNote = NoteModel(uid: uidNote, text: text, createdAt: createdAt);
     final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
     final result = await _userDataRepository.updateNote(note: updatedNote, userId: userId!);
+    result.fold(
+      (l) {
+        state = NoteDetailsErrorListener(l.message);
+      },
+      (r) {
+        state = NeedRebuildHomeListener();
+      },
+    );
+  }
+
+  @action
+  Future<void> deleteNote({required String uidNote}) async {
+    final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
+    final result = await _userDataRepository.deleteNote(uidNote: uidNote, userId: userId!);
     result.fold(
       (l) {
         state = NoteDetailsErrorListener(l.message);

@@ -35,4 +35,13 @@ class UserDataRepositoryImpl implements IUserDataRepository {
       return Left(ResultError(message: e.toString(), code: ''));
     }
   }
+
+  @override
+  Future<Either<ResultError, bool>> deleteNote({required String uidNote, required String userId}) async {
+    try {
+      return await _datasource.deleteNote(uidNote: uidNote, userId: userId);
+    } catch (e) {
+      return Left(ResultError(message: e.toString(), code: ''));
+    }
+  }
 }
