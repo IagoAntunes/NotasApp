@@ -10,6 +10,7 @@ import 'package:notes_app/src/auh/external/datasource/auth_datasource_impl.dart'
 import 'package:notes_app/src/auh/infra/datasource/auth_datasource.dart';
 import 'package:notes_app/src/auh/infra/repository/auth_repository_impl.dart';
 import 'package:notes_app/src/auh/presentation/controller/auth_controller.dart';
+import 'package:notes_app/src/auh/presentation/controller/auth_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../src/auh/presentation/controller/register_controller.dart';
@@ -33,10 +34,11 @@ Future<void> setupInjector() async {
   injector.registerFactory<INoteDataDatasource>(
     () => NoteDataDatasourceImpl(firestore: firestore),
   );
-  injector.registerFactory<IUserDataRepository>(
-    () => UserDataRepositoryImpl(datasource: injector()),
+  injector.registerFactory<INoteDataRepository>(
+    () => NoteDataRepositoryImpl(datasource: injector()),
   );
 
+  injector.registerLazySingleton<AuthNotifier>(() => AuthNotifier(firebaseAuth: firebaseAuth, sharedPreferences: sharedPreferences));
   injector.registerLazySingleton<AuthController>(() => AuthController(authRepository: injector()));
   injector.registerLazySingleton<RegisterController>(() => RegisterController(authRepository: injector()));
   injector.registerLazySingleton<HomeController>(() => HomeController(
@@ -47,7 +49,7 @@ Future<void> setupInjector() async {
   injector.registerFactory<NoteDetailsController>(
     () => NoteDetailsController(
       sharedPreferences: injector(),
-      userDataRepository: injector(),
+      noteRepository: injector(),
     ),
   );
 }

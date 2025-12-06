@@ -7,6 +7,7 @@ import 'package:notes_app/core/styles/app_note_color.dart';
 import 'package:notes_app/src/home/presentation/controller/note_details_controller.dart';
 import 'package:notes_app/src/home/presentation/screens/note_details_screen.dart';
 import '../../../../core/mobx/mobx_listener.dart';
+import '../../../auh/presentation/controller/auth_notifier.dart';
 import '../../domain/models/note_details_params.dart';
 import '../screens/note_stats_screen.dart';
 import '../states/note_details_state.dart';
@@ -21,6 +22,7 @@ class NoteDetailsContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = injector<NoteDetailsController>();
+    final authNotifier = injector<AuthNotifier>();
 
     return MobxStateListener<INoteDetailsState>(
       getState: () => controller.state,
@@ -32,6 +34,9 @@ class NoteDetailsContainer extends StatelessWidget {
         if (state is NoteDetailsErrorListener) {
           final snackBar = SnackBar(content: Text('Ocorreu um problema'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+        if (state is NeedLoginHomeListener) {
+          authNotifier.signOut();
         }
       },
       child: Observer(

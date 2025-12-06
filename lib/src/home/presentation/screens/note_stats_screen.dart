@@ -87,7 +87,7 @@ class NoteStatsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: const Color.fromRGBO(0, 0, 0, 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -103,7 +103,7 @@ class NoteStatsScreen extends StatelessWidget {
                     percentage: data.letters / safeMax,
                     color: const Color(0xFFCE93D8),
                   ),
-                  Container(width: 1, height: 150, color: Colors.grey.withOpacity(0.2)),
+                  Container(width: 1, height: 150, color: const Color.fromRGBO(158, 158, 158, 0.2)),
                   _BarColumn(
                     label: "Números",
                     value: data.digits,
@@ -194,7 +194,7 @@ class _StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.5),
+            color: color.withAlpha((0.5 * 255).round()),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

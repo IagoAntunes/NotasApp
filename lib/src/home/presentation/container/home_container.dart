@@ -31,11 +31,7 @@ class _HomeContainerState extends State<HomeContainer> {
     return MobxStateListener<IHomeState>(
       getState: () => controller.state,
       listenWhen: (previous, current) => current is IHomeListener,
-      onListen: (context, state) {
-        if (state is HomeLogoutSuccessListener) {
-          context.go(AppRoutes.auth);
-        }
-      },
+      onListen: (context, state) {},
       child: Observer(
         builder: (_) {
           return HomeScreen(

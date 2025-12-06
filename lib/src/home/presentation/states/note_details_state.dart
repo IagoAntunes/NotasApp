@@ -16,3 +16,7 @@ class NoteDetailsErrorListener extends INoteDetailsListener {
 class NeedRebuildHomeListener extends INoteDetailsListener {
   NeedRebuildHomeListener();
 }
+
+class NeedLoginHomeListener extends INoteDetailsListener {
+  NeedLoginHomeListener();
+}

@@ -14,14 +14,14 @@ class HomeController = _HomeControllerBase with _$HomeController;
 abstract class _HomeControllerBase with Store {
   _HomeControllerBase({
     required final IAuthRepository authRepository,
-    required final IUserDataRepository userDataRepository,
+    required final INoteDataRepository userDataRepository,
     required final SharedPreferences sharedPreferences,
   })  : _authRepository = authRepository,
         _userDataRepository = userDataRepository,
         _sharedPreferences = sharedPreferences;
 
   final IAuthRepository _authRepository;
-  final IUserDataRepository _userDataRepository;
+  final INoteDataRepository _userDataRepository;
   final SharedPreferences _sharedPreferences;
 
   @observable

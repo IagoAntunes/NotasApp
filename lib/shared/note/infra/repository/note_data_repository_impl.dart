@@ -4,8 +4,8 @@ import 'package:notes_app/shared/note/domain/repository/note_data_repository.dar
 import 'package:notes_app/shared/note/infra/datasource/note_data_datasource.dart';
 import 'package:notes_app/src/home/domain/models/note_model.dart';
 
-class UserDataRepositoryImpl implements IUserDataRepository {
-  UserDataRepositoryImpl({required INoteDataDatasource datasource}) : _datasource = datasource;
+class NoteDataRepositoryImpl implements INoteDataRepository {
+  NoteDataRepositoryImpl({required INoteDataDatasource datasource}) : _datasource = datasource;
 
   final INoteDataDatasource _datasource;
 
