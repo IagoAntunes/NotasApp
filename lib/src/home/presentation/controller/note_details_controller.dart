@@ -29,7 +29,7 @@ abstract class _NoteDetailsControllerBase with Store {
   Future<void> saveNote({required String text}) async {
     final uid = uuid.v4();
     final createdAt = DateTime.now().millisecondsSinceEpoch;
-    final newNote = NoteModel(uid: uid, text: text, createdAt: createdAt);
+    final newNote = NoteModel(uid: uid, text: text, createdAt: createdAt, updatedCount: 0);
     final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
     final result = await _userDataRepository.createNote(note: newNote, userId: userId!);
     result.fold(
@@ -43,15 +43,18 @@ abstract class _NoteDetailsControllerBase with Store {
   }
 
   @action
-  Future<void> updateNote({required String text, required String uidNote, required int createdAt}) async {
-    final updatedNote = NoteModel(uid: uidNote, text: text, createdAt: createdAt);
+  Future<void> updateNote({
+    required String newText,
+    required NoteModel note,
+  }) async {
+    final updatedNote = NoteModel(uid: note.uid, text: newText, createdAt: note.createdAt, updatedCount: note.updatedCount + 1);
     final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
     final result = await _userDataRepository.updateNote(note: updatedNote, userId: userId!);
     result.fold(
       (l) {
         state = NoteDetailsErrorListener(l.message);
       },
-      (r) {
+      (r) async {
         state = NeedRebuildHomeListener();
       },
     );

@@ -8,4 +8,5 @@ class AppRoutes {
   static const String register = '/register';
   static const String home = '/home';
   static const String noteDetails = '/note_details';
+  static const String noteStats = '/note-stats';
 }

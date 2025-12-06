@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes_app/core/di/injector.dart';
 import 'package:notes_app/core/router/routes.dart';
-import 'package:notes_app/core/styles/app_note_color.dart';
+import 'package:notes_app/src/home/domain/models/note_details_params.dart';
 import 'package:notes_app/src/home/presentation/controller/home_controller.dart';
 import 'package:notes_app/src/home/presentation/states/home_state.dart';
 import '../../../../core/mobx/mobx_listener.dart';
@@ -46,27 +46,28 @@ class _HomeContainerState extends State<HomeContainer> {
               controller.logOut();
             },
             onTapNoteDetails: (title, note, backgroundColor, index) async {
-              final result = await context.push<bool?>(AppRoutes.noteDetails, extra: {
-                'title': title,
-                'content': note.text,
-                'backgroundColor': backgroundColor,
-                'index': index,
-                'uidNote': note.uid,
-                'createdAt': note.createdAt,
-              });
+              final params = NoteDetailsParams(
+                note: note,
+                index: index,
+                creating: false,
+              );
+
+              final result = await context.push<bool?>(
+                AppRoutes.noteDetails,
+                extra: params,
+              );
 
               if (result == true) {
                 controller.fetchNotes();
               }
             },
             onTapCreateNote: () async {
-              final result = await context.push<bool?>(AppRoutes.noteDetails, extra: {
-                'title': 'Nova Nota',
-                'content': '',
-                'backgroundColor': AppNoteColors.getColor((controller.state as HomeComplete).notes.length).base,
-                'index': (controller.state as HomeComplete).notes.length,
-                'creating': true,
-              });
+              final params = NoteDetailsParams(
+                note: null,
+                index: (controller.state as HomeComplete).notes.length,
+                creating: true,
+              );
+              final result = await context.push<bool?>(AppRoutes.noteDetails, extra: params);
 
               if (result == true) {
                 controller.fetchNotes();

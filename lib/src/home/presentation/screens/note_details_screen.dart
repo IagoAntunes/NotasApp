@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:notes_app/core/styles/app_note_color.dart';
 
 class NoteDetailScreen extends StatefulWidget {
-  final String title;
   final String content;
   final Color backgroundColor;
   final int index;
   final bool isCreating;
   final ValueChanged<String> onSave;
   final VoidCallback onDelete;
+  final VoidCallback onTapStats;
 
   const NoteDetailScreen({
     super.key,
-    required this.title,
     required this.content,
     required this.backgroundColor,
     required this.index,
     required this.isCreating,
     required this.onSave,
     required this.onDelete,
+    required this.onTapStats,
   });
 
   @override
@@ -60,9 +59,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               backgroundColor: AppNoteColors.getColor(widget.index).darker,
               label: Text('Estatísticas', style: TextStyle(color: Colors.black)),
               icon: Icon(Icons.bar_chart_outlined),
-              onPressed: () {
-                //
-              },
+              onPressed: widget.onTapStats,
             ),
       body: SafeArea(
         child: Hero(
@@ -77,7 +74,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        widget.title,
+                        'Nota ${widget.index + 1}',
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,

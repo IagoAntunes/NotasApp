@@ -3,11 +3,13 @@ import 'dart:convert';
 class NoteModel {
   final String uid;
   final String text;
+  final int updatedCount;
   final int createdAt;
 
   NoteModel({
     required this.uid,
     required this.text,
+    required this.updatedCount,
     required this.createdAt,
   });
 
@@ -15,6 +17,7 @@ class NoteModel {
     return <String, dynamic>{
       'uid': uid,
       'text': text,
+      'updatedCount': updatedCount,
       'createdAt': createdAt,
     };
   }
@@ -23,6 +26,7 @@ class NoteModel {
     return NoteModel(
       uid: map['uid'] as String,
       text: map['text'] as String,
+      updatedCount: map['updatedCount'] is int ? map['updatedCount'] as int : int.tryParse('${map['updatedCount']}') ?? 0,
       createdAt: map['createdAt'] is int ? map['createdAt'] as int : int.tryParse('${map['createdAt']}') ?? 0,
     );
   }

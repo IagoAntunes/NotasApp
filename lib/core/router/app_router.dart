@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:notes_app/src/home/presentation/screens/note_stats_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/database/keyvalue/app_sharedpreferences_keys.dart';
 import '../../core/di/injector.dart';
 import '../../src/auh/presentation/container/auth_container.dart';
 import '../../src/auh/presentation/container/register_container.dart';
+import '../../src/home/domain/models/note_details_params.dart';
 import '../../src/home/presentation/container/home_container.dart';
 import '../../src/home/presentation/container/note_details_container.dart';
+import '../../src/home/presentation/container/note_stats_container.dart';
 import 'routes.dart';
 
 class AppRouter {
@@ -54,24 +57,23 @@ class AppRouter {
           path: AppRoutes.noteDetails,
           name: 'noteDetails',
           pageBuilder: (context, state) {
-            final args = state.extra as Map<String, dynamic>;
-            final String title = args['title'];
-            final String content = args['content'];
-            final Color backgroundColor = args['backgroundColor'];
-            final int index = args['index'];
-            final bool creating = (args['creating'] as bool?) ?? false;
-            final String uidNote = (args['uidNote'] as String?) ?? '';
-            final int? createdAt = (args['createdAt'] as int?);
+            final args = state.extra as NoteDetailsParams;
 
             return MaterialPage(
               child: NoteDetailsContainer(
-                uidNote: uidNote,
-                backgroundColor: backgroundColor,
-                content: content,
-                index: index,
-                title: title,
-                creating: creating,
-                createdAt: createdAt,
+                params: args,
+              ),
+            );
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.noteStats,
+          name: 'noteStats',
+          pageBuilder: (context, state) {
+            final args = state.extra as NoteStatsData;
+            return MaterialPage(
+              child: NoteStatsContainer(
+                data: args,
               ),
             );
           },
