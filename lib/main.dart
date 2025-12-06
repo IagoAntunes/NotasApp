@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         useMaterial3: true,
         fontFamily: 'Poppins',
-        scaffoldBackgroundColor: const Color(0xFFFFF5E6),
+        scaffoldBackgroundColor: AppColors.secondary,
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,

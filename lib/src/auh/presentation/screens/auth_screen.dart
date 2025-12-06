@@ -31,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFF5E6),
+      backgroundColor: AppColors.secondary,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(

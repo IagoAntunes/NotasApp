@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:notes_app/shared/userData/domain/repository/user_data_repository.dart';
-import 'package:notes_app/shared/userData/external/datasource/datasource/user_data_datasource_impl.dart';
-import 'package:notes_app/shared/userData/infra/datasource/user_data_datasource.dart';
-import 'package:notes_app/shared/userData/infra/repository/user_data_repository_impl.dart';
+import 'package:notes_app/shared/note/domain/repository/note_data_repository.dart';
+import 'package:notes_app/shared/note/external/datasource/datasource/note_data_datasource_impl.dart';
+import 'package:notes_app/shared/note/infra/datasource/note_data_datasource.dart';
+import 'package:notes_app/shared/note/infra/repository/note_data_repository_impl.dart';
 import 'package:notes_app/src/auh/domain/repository/auth_repository.dart';
 import 'package:notes_app/src/auh/external/datasource/auth_datasource_impl.dart';
 import 'package:notes_app/src/auh/infra/datasource/auth_datasource.dart';
@@ -30,8 +30,8 @@ Future<void> setupInjector() async {
   injector.registerFactory<IAuthRepository>(
     () => AuthRepositoryImpl(authDataSource: injector(), sharedPreferences: injector()),
   );
-  injector.registerFactory<IUserDataDatasource>(
-    () => UserDataDatasourceImpl(firestore: firestore),
+  injector.registerFactory<INoteDataDatasource>(
+    () => NoteDataDatasourceImpl(firestore: firestore),
   );
   injector.registerFactory<IUserDataRepository>(
     () => UserDataRepositoryImpl(datasource: injector()),

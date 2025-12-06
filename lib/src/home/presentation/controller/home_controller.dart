@@ -1,6 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'package:mobx/mobx.dart';
-import 'package:notes_app/shared/userData/domain/repository/user_data_repository.dart';
+import 'package:notes_app/shared/note/domain/repository/note_data_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../services/database/keyvalue/app_sharedpreferences_keys.dart';

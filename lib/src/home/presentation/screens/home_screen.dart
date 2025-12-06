@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFFFFF5E6),
+      backgroundColor: AppColors.secondary,
       floatingActionButton: FloatingActionButton(
         onPressed: onTapCreateNote,
         backgroundColor: AppColors.primary,
@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Color(0xFFFFF5E6),
+                color: AppColors.secondary,
               ),
               child: Text(
                 'Menu',
@@ -74,7 +74,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
-                  color: Color(0xFFFFF5E6),
+                  color: AppColors.secondary,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
