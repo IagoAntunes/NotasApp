@@ -36,6 +36,12 @@ class AuthRepositoryImpl implements IAuthRepository {
     if (result.isRight()) {
       _sharedPreferences.setString(AppSharedpreferencesKeys.email, email);
       _sharedPreferences.setBool(AppSharedpreferencesKeys.isLogged, true);
+      result.fold(
+        (l) {},
+        (r) {
+          _sharedPreferences.setString(AppSharedpreferencesKeys.userId, r.id);
+        },
+      );
     }
     return result;
   }

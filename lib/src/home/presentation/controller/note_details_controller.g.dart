@@ -29,8 +29,17 @@ mixin _$NoteDetailsController on _NoteDetailsControllerBase, Store {
       AsyncAction('_NoteDetailsControllerBase.saveNote', context: context);
 
   @override
-  Future<void> saveNote() {
-    return _$saveNoteAsyncAction.run(() => super.saveNote());
+  Future<void> saveNote({required String text}) {
+    return _$saveNoteAsyncAction.run(() => super.saveNote(text: text));
+  }
+
+  late final _$updateNoteAsyncAction =
+      AsyncAction('_NoteDetailsControllerBase.updateNote', context: context);
+
+  @override
+  Future<void> updateNote({required String text, required String uidNote}) {
+    return _$updateNoteAsyncAction
+        .run(() => super.updateNote(text: text, uidNote: uidNote));
   }
 
   late final _$_NoteDetailsControllerBaseActionController =

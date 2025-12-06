@@ -25,6 +25,14 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
+  late final _$fetchNotesAsyncAction =
+      AsyncAction('_HomeControllerBase.fetchNotes', context: context);
+
+  @override
+  Future<void> fetchNotes() {
+    return _$fetchNotesAsyncAction.run(() => super.fetchNotes());
+  }
+
   late final _$logOutAsyncAction =
       AsyncAction('_HomeControllerBase.logOut', context: context);
 

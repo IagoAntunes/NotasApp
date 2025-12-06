@@ -10,13 +10,14 @@ import '../states/note_details_state.dart';
 class NoteDetailsContainer extends StatelessWidget {
   const NoteDetailsContainer({
     super.key,
+    required this.uidNote,
     required this.title,
     required this.content,
     required this.backgroundColor,
     required this.index,
     this.creating = false,
   });
-
+  final String uidNote;
   final String title;
   final String content;
   final Color backgroundColor;
@@ -30,7 +31,11 @@ class NoteDetailsContainer extends StatelessWidget {
     return MobxStateListener<INoteDetailsState>(
       getState: () => controller.state,
       listenWhen: (previous, current) => current is INoteDetailsListener,
-      onListen: (context, state) {},
+      onListen: (context, state) {
+        if (state is NeedRebuildHomeListener) {
+          if (context.mounted) context.pop(true);
+        }
+      },
       child: Observer(
         builder: (_) {
           return NoteDetailScreen(
@@ -44,11 +49,9 @@ class NoteDetailsContainer extends StatelessWidget {
             },
             onSave: (value) async {
               if (creating) {
-                await controller.saveNote();
-                if (context.mounted) context.pop();
+                await controller.saveNote(text: value);
               } else {
-                await controller.saveNote();
-                if (context.mounted) context.pop();
+                await controller.updateNote(text: value, uidNote: uidNote);
               }
             },
           );

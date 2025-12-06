@@ -9,8 +9,20 @@ import 'package:notes_app/src/home/presentation/states/home_state.dart';
 import '../../../../core/mobx/mobx_listener.dart';
 import '../screens/home_screen.dart';
 
-class HomeContainer extends StatelessWidget {
+class HomeContainer extends StatefulWidget {
   const HomeContainer({super.key});
+
+  @override
+  State<HomeContainer> createState() => _HomeContainerState();
+}
+
+class _HomeContainerState extends State<HomeContainer> {
+  @override
+  void initState() {
+    super.initState();
+    final controller = injector<HomeController>();
+    controller.fetchNotes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,27 +39,37 @@ class HomeContainer extends StatelessWidget {
       child: Observer(
         builder: (_) {
           return HomeScreen(
+            notes: controller.state is HomeComplete ? (controller.state as HomeComplete).notes : [],
             onTapDocumentation: () {},
             onTapLogout: () {
               controller.logOut();
             },
-            onTapNoteDetails: (title, content, backgroundColor, index) {
-              context.push(AppRoutes.noteDetails, extra: {
+            onTapNoteDetails: (title, note, backgroundColor, index) async {
+              final result = await context.push<bool?>(AppRoutes.noteDetails, extra: {
                 'title': title,
-                'content': content,
+                'content': note.text,
                 'backgroundColor': backgroundColor,
                 'index': index,
+                'uidNote': note.uid,
               });
+
+              if (result == true) {
+                controller.fetchNotes();
+              }
             },
-            onTapCreateNote: () {
+            onTapCreateNote: () async {
               final color = const Color(0xFFFFFDE7);
-              context.push(AppRoutes.noteDetails, extra: {
+              final result = await context.push<bool?>(AppRoutes.noteDetails, extra: {
                 'title': 'Nova Nota',
                 'content': '',
                 'backgroundColor': color,
                 'index': -1,
                 'creating': true,
               });
+
+              if (result == true) {
+                controller.fetchNotes();
+              }
             },
           );
         },

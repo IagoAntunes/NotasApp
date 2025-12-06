@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:notes_app/src/home/domain/models/note_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/app_images.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({
     super.key,
+    required this.notes,
     required this.onTapLogout,
     required this.onTapDocumentation,
     required this.onTapNoteDetails,
@@ -17,17 +19,10 @@ class HomeScreen extends StatelessWidget {
 
   final Function() onTapLogout;
   final Function() onTapDocumentation;
-  final Function(String, String, Color, int) onTapNoteDetails;
+  final Function(String, NoteModel, Color, int) onTapNoteDetails;
   final Function() onTapCreateNote;
 
-  final List<String> myNotes = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-    "Nota curta aqui.",
-    "Esta é uma nota muito grande para testar o limite de linhas. Se este texto for muito longo, ele deve ser cortado no final para não quebrar o layout do card e manter a uniformidade visual que desejamos. Bla bla bla bla bla bla bla bla.",
-    "Outro texto de exemplo para preencher o grid.",
-    "Mais um teste de layout com texto variável.",
-    "A ideia do Masonry é que cada card tenha a altura do seu conteúdo, mas com o maxLines nós colocamos um teto limite.",
-  ];
+  final List<NoteModel> notes;
 
   final List<Color> cardColors = [
     Color(0xFFE3F2FD),
@@ -117,7 +112,7 @@ class HomeScreen extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
-                itemCount: myNotes.length,
+                itemCount: notes.length,
                 itemBuilder: (context, index) {
                   final noteColor = cardColors[index % cardColors.length];
                   final noteTitle = "Nota ${index + 1}";
@@ -125,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                   return GestureDetector(
                     onTap: () => onTapNoteDetails(
                       noteTitle,
-                      myNotes[index],
+                      notes[index],
                       noteColor,
                       index,
                     ),
@@ -143,16 +138,7 @@ class HomeScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                noteTitle,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                myNotes[index],
+                                notes[index].text,
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black,

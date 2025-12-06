@@ -27,10 +27,19 @@ abstract class _HomeControllerBase with Store {
   @observable
   IHomeState state = HomeIdle();
 
+  @action
   Future<void> fetchNotes() async {
     state = HomeLoading();
-    _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
-    final result = await _userDataRepository.getNotesByUser(userId: 'currentUserId');
+    final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
+    final result = await _userDataRepository.getNotesByUser(userId: userId!);
+    result.fold(
+      (l) {
+        state = HomeErrorListener(l.message);
+      },
+      (r) {
+        state = HomeComplete(notes: r);
+      },
+    );
   }
 
   @action

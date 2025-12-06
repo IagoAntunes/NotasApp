@@ -17,4 +17,22 @@ class UserDataRepositoryImpl implements IUserDataRepository {
       return Left(ResultError(message: e.toString(), code: ''));
     }
   }
+
+  @override
+  Future<Either<ResultError, bool>> createNote({required NoteModel note, required String userId}) async {
+    try {
+      return await _datasource.createNote(note: note, userId: userId);
+    } catch (e) {
+      return Left(ResultError(message: e.toString(), code: ''));
+    }
+  }
+
+  @override
+  Future<Either<ResultError, bool>> updateNote({required NoteModel note, required String userId}) async {
+    try {
+      return await _datasource.updateNote(note: note, userId: userId);
+    } catch (e) {
+      return Left(ResultError(message: e.toString(), code: ''));
+    }
+  }
 }

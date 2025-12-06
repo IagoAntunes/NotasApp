@@ -13,11 +13,36 @@ class UserDataDatasourceImpl implements IUserDataDatasource {
   @override
   Future<Either<ResultError, List<NoteModel>>> getNotesByUser({required String userId}) async {
     try {
-      final result = await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).get();
+      final result = await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).get();
 
-      final notesData = result.data()?['notes'] as List<dynamic>?;
+      List<NoteModel> notes = [];
+      for (var doc in result.docs) {
+        notes.add(NoteModel.fromMap(doc.data()));
+      }
 
-      return Right([]);
+      return Right(notes);
+    } catch (e) {
+      return Left(ResultError(message: e.toString(), code: ''));
+    }
+  }
+
+  @override
+  Future<Either<ResultError, bool>> createNote({required NoteModel note, required String userId}) async {
+    try {
+      await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid).set(note.toMap());
+
+      return Right(true);
+    } catch (e) {
+      return Left(ResultError(message: e.toString(), code: ''));
+    }
+  }
+
+  @override
+  Future<Either<ResultError, bool>> updateNote({required NoteModel note, required String userId}) async {
+    try {
+      await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid).set(note.toMap());
+
+      return Right(true);
     } catch (e) {
       return Left(ResultError(message: e.toString(), code: ''));
     }

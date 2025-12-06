@@ -60,9 +60,11 @@ class AppRouter {
             final Color backgroundColor = args['backgroundColor'];
             final int index = args['index'];
             final bool creating = (args['creating'] as bool?) ?? false;
+            final String uidNote = (args['uidNote'] as String?) ?? '';
 
             return MaterialPage(
               child: NoteDetailsContainer(
+                uidNote: uidNote,
                 backgroundColor: backgroundColor,
                 content: content,
                 index: index,
