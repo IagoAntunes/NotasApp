@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:notes_app/core/mobx/mobx_listener.dart';
+import 'package:notes_app/services/stateManager/mobx/mobx_listener.dart';
 import 'package:notes_app/core/router/routes.dart';
 import 'package:notes_app/core/di/injector.dart';
 import 'package:notes_app/src/auh/presentation/controller/auth_controller.dart';

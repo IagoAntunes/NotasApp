@@ -6,7 +6,7 @@ import 'package:notes_app/core/router/routes.dart';
 import 'package:notes_app/src/home/domain/models/note_details_params.dart';
 import 'package:notes_app/src/home/presentation/controller/home_controller.dart';
 import 'package:notes_app/src/home/presentation/states/home_state.dart';
-import '../../../../core/mobx/mobx_listener.dart';
+import '../../../../services/stateManager/mobx/mobx_listener.dart';
 import '../screens/home_screen.dart';
 
 class HomeContainer extends StatefulWidget {

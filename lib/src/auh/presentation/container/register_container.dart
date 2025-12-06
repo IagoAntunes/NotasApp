@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notes_app/core/di/injector.dart';
 import 'package:notes_app/src/auh/presentation/screens/register_screen.dart';
 
-import '../../../../core/mobx/mobx_listener.dart';
+import '../../../../services/stateManager/mobx/mobx_listener.dart';
 import '../controller/register_controller.dart';
 import '../states/register_state.dart';
 

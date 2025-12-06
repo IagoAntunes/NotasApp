@@ -6,7 +6,7 @@ import 'package:notes_app/core/router/routes.dart';
 import 'package:notes_app/core/styles/app_note_color.dart';
 import 'package:notes_app/src/home/presentation/controller/note_details_controller.dart';
 import 'package:notes_app/src/home/presentation/screens/note_details_screen.dart';
-import '../../../../core/mobx/mobx_listener.dart';
+import '../../../../services/stateManager/mobx/mobx_listener.dart';
 import '../../../auh/presentation/controller/auth_notifier.dart';
 import '../../domain/models/note_details_params.dart';
 import '../screens/note_stats_screen.dart';
