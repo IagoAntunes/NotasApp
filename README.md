@@ -2,6 +2,23 @@
 
 Este projeto é uma aplicação de gerenciamento de notas desenvolvida utilizando o framework **Flutter**. O objetivo é fornecer uma interface multiplataforma (Android e iOS) para criação e armazenamento de anotações, integrando serviços de backend e boas práticas de desenvolvimento.
 
+## ✅ Como Validar o Projeto
+
+Para testar o funcionamento da aplicação, você possui duas opções:
+
+### Opção 1: Instalação via APK (Rápido)
+A maneira mais simples de visualizar o projeto rodando em um dispositivo Android, sem necessidade de configurar o ambiente de desenvolvimento:
+
+1.  Acesse a aba **[Releases](../../releases)** deste repositório (na barra lateral direita do GitHub).
+2.  Localize a versão mais recente (tag `Latest`).
+3.  Baixe o arquivo `app-release.apk` nos "Assets".
+4.  Instale o arquivo em seu dispositivo Android.
+
+### Opção 2: Compilação via Código Fonte
+Caso queira analisar o código, debugar ou rodar em um simulador iOS:
+
+1.  Siga as instruções detalhadas na seção **"🚀 Como Executar o Projeto"** abaixo.
+
 ## 🛠 Tecnologias e Ferramentas
 
 O projeto foi construído utilizando as seguintes tecnologias baseadas na estrutura do repositório:
@@ -9,9 +26,11 @@ O projeto foi construído utilizando as seguintes tecnologias baseadas na estrut
 *   **Linguagem:** [Dart](https://dart.dev/)
 *   **Framework:** [Flutter](https://flutter.dev/)
 *   **Backend/Infraestrutura:** [Firebase](https://firebase.google.com/) (identificado pelo arquivo `firebase.json`).
-*   **Análise Estática:** Configurada via `analysis_options.yaml` para garantir a qualidade e padronização do código Dart.
-*   **DevTools:** Configurações personalizadas presentes em `devtools_options.yaml`.
-*   **Gerenciamento de Dependências:** Pub (via `pubspec.yaml`).
+
+*   **Gerenciamento de Estado:** [Mobx](https://pub.dev/packages/mobx)
+*   **Navegação:** [GoRouter](https://pub.dev/packages/go_router)
+*   **Armazenamento:** [SharedPreferences](https://pub.dev/packages/shared_preferences)
+
 
 ## 📂 Arquitetura e Estrutura de Pastas
 
@@ -21,8 +40,11 @@ A estrutura do projeto segue os padrões do Flutter, organizada da seguinte form
 *   **`test/`**: Contém os testes automatizados (Unitários e de Widget) para garantir a estabilidade das funcionalidades.
 *   **`assets/`**: Diretório dedicado a recursos estáticos como imagens, fontes e arquivos de configuração locais.
 *   **`android/` & `ios/`**: Pastas contendo o código nativo e configurações específicas para cada plataforma móvel.
-*   **`firebase.json`**: Arquivo de configuração para integração e deploy de serviços do Firebase.
-*   **`analysis_options.yaml`**: Regras de linter para manter o estilo do código consistente.
+
+*   **`controller/`**: Esta é a camada que conversa diretamente com a Interface (Tela). Dependendo da arquitetura, pode ser chamada de ViewModel, Bloc, ou Store.
+*   **`repository/`**: Esta é a camada de decisão e proteção. Ela serve como um "escudo" para o resto do aplicativo e é onde reside o contrato de dados.
+*   **`datasource/`**: Esta é a camada mais "externa" e técnica. Ela não sabe nada sobre regras de negócio; ela apenas sabe como buscar dados.
+
 
 ## 🚀 Como Executar o Projeto
 
