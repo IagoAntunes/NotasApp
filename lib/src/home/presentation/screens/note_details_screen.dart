@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:notes_app/core/styles/app_note_color.dart';
 
 class NoteDetailScreen extends StatefulWidget {
@@ -53,6 +54,16 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
+      floatingActionButton: widget.isCreating
+          ? null
+          : FloatingActionButton.extended(
+              backgroundColor: AppNoteColors.getColor(widget.index).darker,
+              label: Text('Estatísticas', style: TextStyle(color: Colors.black)),
+              icon: Icon(Icons.bar_chart_outlined),
+              onPressed: () {
+                //
+              },
+            ),
       body: SafeArea(
         child: Hero(
           tag: 'note_${widget.index}',
