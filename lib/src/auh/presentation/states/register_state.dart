@@ -8,7 +8,7 @@ class RegisterLoading extends IRegisterState {}
 
 class RegisterComplete extends IRegisterState {}
 
-class RegisterErrorListener extends IRegisterState {
+class RegisterErrorListener extends IRegisterListener {
   RegisterErrorListener(this.message);
   final String message;
 }

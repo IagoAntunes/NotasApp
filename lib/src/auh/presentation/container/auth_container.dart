@@ -9,12 +9,11 @@ import 'package:notes_app/src/auh/presentation/screens/auth_screen.dart';
 import 'package:notes_app/src/auh/presentation/states/auth_state.dart';
 
 class AuthContainer extends StatelessWidget {
-  const AuthContainer({super.key});
+  AuthContainer({super.key});
+  final controller = injector<AuthController>();
 
   @override
   Widget build(BuildContext context) {
-    final controller = injector<AuthController>();
-
     return MobxStateListener<IAuthState>(
       getState: () => controller.state,
       listenWhen: (previous, current) => current is IAuthListener,
@@ -24,6 +23,8 @@ class AuthContainer extends StatelessWidget {
           if (state.message.isNotEmpty) {
             if (state.message == 'invalid-credential') {
               message = 'Credenciais inválidas. Por favor, verifique seu e-mail e senha.';
+            } else if (state.message == 'network-request-failed') {
+              message = 'Falha na conexão. Verifique sua internet e tente novamente.';
             } else {
               message = 'Credenciais inválidas.';
             }
@@ -39,7 +40,6 @@ class AuthContainer extends StatelessWidget {
         builder: (_) {
           final state = controller.state;
           final isLoading = state is AuthLoading;
-
           return AuthScreen(
             onLoginTap: (email, password) {
               FocusScope.of(context).unfocus();

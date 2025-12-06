@@ -37,7 +37,7 @@ abstract class _HomeControllerBase with Store {
         state = HomeErrorListener(l.message);
       },
       (r) {
-        state = HomeComplete(notes: r);
+        state = HomeComplete(notes: List.from(r));
       },
     );
   }

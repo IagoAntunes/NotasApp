@@ -20,7 +20,11 @@ class RegisterContainer extends StatelessWidget {
       listenWhen: (previous, current) => current is IRegisterListener,
       onListen: (context, state) {
         if (state is RegisterErrorListener) {
-          final snackBar = SnackBar(content: Text(state.message));
+          String errorMessage = 'Ocorreu um erro no registro.';
+          if (state.message == 'network-request-failed') {
+            errorMessage = 'Falha na conexão. Verifique sua internet e tente novamente.';
+          }
+          final snackBar = SnackBar(content: Text(errorMessage));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           controller.resetState();
         }

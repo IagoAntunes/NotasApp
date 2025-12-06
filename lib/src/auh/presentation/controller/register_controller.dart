@@ -26,7 +26,7 @@ abstract class _RegisterControllerBase with Store {
 
     result.fold(
       (l) {
-        state = RegisterErrorListener(l.message);
+        state = RegisterErrorListener(l.code ?? '');
       },
       (r) {
         state = RegisterSuccessListener();

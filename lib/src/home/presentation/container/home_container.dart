@@ -6,6 +6,7 @@ import 'package:notes_app/core/router/routes.dart';
 import 'package:notes_app/src/home/domain/models/note_details_params.dart';
 import 'package:notes_app/src/home/presentation/controller/home_controller.dart';
 import 'package:notes_app/src/home/presentation/states/home_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../services/stateManager/mobx/mobx_listener.dart';
 import '../screens/home_screen.dart';
 
@@ -20,14 +21,13 @@ class _HomeContainerState extends State<HomeContainer> {
   @override
   void initState() {
     super.initState();
-    final controller = injector<HomeController>();
     controller.fetchNotes();
   }
 
+  final controller = injector<HomeController>();
+
   @override
   Widget build(BuildContext context) {
-    final controller = injector<HomeController>();
-
     return MobxStateListener<IHomeState>(
       getState: () => controller.state,
       listenWhen: (previous, current) => current is IHomeListener,
@@ -37,7 +37,12 @@ class _HomeContainerState extends State<HomeContainer> {
           return HomeScreen(
             notes: controller.state is HomeComplete ? (controller.state as HomeComplete).notes : [],
             isLoading: controller.state is HomeLoading,
-            onTapDocumentation: () {},
+            onTapDocumentation: () async {
+              try {
+                await launchUrl(Uri.parse('https://github.com/aaa/NotesApp/blob/main/README.md'));
+                // ignore: empty_catches
+              } catch (e) {}
+            },
             onTapLogout: () {
               controller.logOut();
             },
@@ -60,7 +65,7 @@ class _HomeContainerState extends State<HomeContainer> {
             onTapCreateNote: () async {
               final params = NoteDetailsParams(
                 note: null,
-                index: (controller.state as HomeComplete).notes.length,
+                index: controller.state is HomeComplete ? (controller.state as HomeComplete).notes.length : 0,
                 creating: true,
               );
               final result = await context.push<bool?>(AppRoutes.noteDetails, extra: params);

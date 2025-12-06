@@ -39,9 +39,9 @@ Future<void> setupInjector() async {
   );
 
   injector.registerLazySingleton<AuthNotifier>(() => AuthNotifier(firebaseAuth: firebaseAuth, sharedPreferences: sharedPreferences));
-  injector.registerLazySingleton<AuthController>(() => AuthController(authRepository: injector()));
-  injector.registerLazySingleton<RegisterController>(() => RegisterController(authRepository: injector()));
-  injector.registerLazySingleton<HomeController>(() => HomeController(
+  injector.registerFactory<AuthController>(() => AuthController(authRepository: injector()));
+  injector.registerFactory<RegisterController>(() => RegisterController(authRepository: injector()));
+  injector.registerFactory<HomeController>(() => HomeController(
         authRepository: injector(),
         sharedPreferences: injector(),
         userDataRepository: injector(),

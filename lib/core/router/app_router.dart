@@ -29,7 +29,7 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.auth,
           name: 'auth',
-          pageBuilder: (context, state) => const MaterialPage(
+          pageBuilder: (context, state) => MaterialPage(
             child: AuthContainer(),
           ),
         ),
