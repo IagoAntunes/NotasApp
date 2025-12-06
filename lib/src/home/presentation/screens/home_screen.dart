@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:notes_app/core/styles/app_note_color.dart';
 import 'package:notes_app/src/home/domain/models/note_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/app_images.dart';
@@ -25,15 +26,6 @@ class HomeScreen extends StatelessWidget {
 
   final List<NoteModel> notes;
   final bool isLoading;
-
-  final List<Color> cardColors = [
-    Color(0xFFE3F2FD),
-    Color(0xFFFFEBEE),
-    Color(0xFFE8F5E9),
-    Color(0xFFFFF3E0),
-    Color(0xFFF3E5F5),
-    Color(0xFFFFFDE7),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +135,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisSpacing: 8,
                   itemCount: notes.length,
                   itemBuilder: (context, index) {
-                    final noteColor = cardColors[index % cardColors.length];
+                    final noteColor = AppNoteColors.colors[index % AppNoteColors.colors.length].base;
                     final noteTitle = "Nota ${index + 1}";
 
                     return GestureDetector(

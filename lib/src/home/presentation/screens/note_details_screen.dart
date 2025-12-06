@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/core/styles/app_note_color.dart';
 
 class NoteDetailScreen extends StatefulWidget {
   final String title;
@@ -78,8 +79,8 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          backgroundColor: Colors.white70,
-                          foregroundColor: Colors.black87,
+                          backgroundColor: AppNoteColors.getColor(widget.index).darker,
+                          foregroundColor: Colors.black,
                         ),
                         onPressed: () {
                           if (_isEditing) {
@@ -99,8 +100,8 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            backgroundColor: Colors.white70,
-                            foregroundColor: Colors.black87,
+                            backgroundColor: AppNoteColors.getColor(widget.index).darker,
+                            foregroundColor: Colors.black,
                           ),
                           onPressed: widget.onDelete,
                           icon: const Icon(Icons.delete_outline),

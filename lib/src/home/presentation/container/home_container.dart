@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notes_app/core/di/injector.dart';
 import 'package:notes_app/core/router/routes.dart';
+import 'package:notes_app/core/styles/app_note_color.dart';
 import 'package:notes_app/src/home/presentation/controller/home_controller.dart';
 import 'package:notes_app/src/home/presentation/states/home_state.dart';
 import '../../../../core/mobx/mobx_listener.dart';
@@ -59,12 +60,11 @@ class _HomeContainerState extends State<HomeContainer> {
               }
             },
             onTapCreateNote: () async {
-              final color = const Color(0xFFFFFDE7);
               final result = await context.push<bool?>(AppRoutes.noteDetails, extra: {
                 'title': 'Nova Nota',
                 'content': '',
-                'backgroundColor': color,
-                'index': -1,
+                'backgroundColor': AppNoteColors.getColor((controller.state as HomeComplete).notes.length).base,
+                'index': (controller.state as HomeComplete).notes.length,
                 'creating': true,
               });
 
