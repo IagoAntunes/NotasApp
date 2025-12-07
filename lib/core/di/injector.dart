@@ -43,12 +43,12 @@ Future<void> setupInjector() async {
   injector.registerFactory<RegisterController>(() => RegisterController(authRepository: injector()));
   injector.registerFactory<HomeController>(() => HomeController(
         authRepository: injector(),
-        sharedPreferences: injector(),
         userDataRepository: injector(),
+        firebaseAuth: firebaseAuth,
       ));
   injector.registerFactory<NoteDetailsController>(
     () => NoteDetailsController(
-      sharedPreferences: injector(),
+      firebaseAuth: firebaseAuth,
       noteRepository: injector(),
     ),
   );

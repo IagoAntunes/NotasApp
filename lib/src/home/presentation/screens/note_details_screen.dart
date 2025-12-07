@@ -8,7 +8,7 @@ class NoteDetailScreen extends StatefulWidget {
   final bool isCreating;
   final ValueChanged<String> onSave;
   final VoidCallback onDelete;
-  final VoidCallback onTapStats;
+  final Function(double) onTapStats;
 
   const NoteDetailScreen({
     super.key,
@@ -59,7 +59,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               backgroundColor: AppNoteColors.getColor(widget.index).darker,
               label: Text('Estatísticas', style: TextStyle(color: Colors.black)),
               icon: Icon(Icons.bar_chart_outlined),
-              onPressed: widget.onTapStats,
+              onPressed: () => widget.onTapStats(MediaQuery.of(context).size.width - 48),
             ),
       body: SafeArea(
         child: Hero(

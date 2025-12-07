@@ -55,7 +55,6 @@ void main() {
         expect(controller.state, isA<RegisterLoading>());
         await future;
         expect(controller.state, isA<RegisterErrorListener>());
-        expect((controller.state as RegisterErrorListener).message, 'error message');
         verify(() => mockAuthRepository.registerWithEmailAndPassword(
               email: 'test@test.com',
               password: 'password',

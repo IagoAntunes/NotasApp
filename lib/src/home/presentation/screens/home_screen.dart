@@ -45,12 +45,18 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.secondary,
               ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Menu',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                    ),
+                  ),
+                  Text('Feito por Iago Ferreira', style: TextStyle(color: Colors.black))
+                ],
               ),
             ),
             ListTile(

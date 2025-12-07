@@ -1,9 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx/mobx.dart';
-import 'package:notes_app/services/database/keyvalue/app_sharedpreferences_keys.dart';
 import 'package:notes_app/shared/note/domain/repository/note_data_repository.dart';
 import 'package:notes_app/src/home/domain/models/note_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../states/note_details_state.dart';
 
@@ -14,13 +13,13 @@ class NoteDetailsController = _NoteDetailsControllerBase with _$NoteDetailsContr
 abstract class _NoteDetailsControllerBase with Store {
   _NoteDetailsControllerBase({
     required INoteDataRepository noteRepository,
-    required SharedPreferences sharedPreferences,
+    required FirebaseAuth firebaseAuth,
   })  : _noteRepository = noteRepository,
-        _sharedPreferences = sharedPreferences;
+        _firebaseAuth = firebaseAuth;
 
   var uuid = Uuid();
   final INoteDataRepository _noteRepository;
-  final SharedPreferences _sharedPreferences;
+  final FirebaseAuth _firebaseAuth;
 
   @observable
   INoteDetailsState state = NoteDetailsIdle();
@@ -29,7 +28,7 @@ abstract class _NoteDetailsControllerBase with Store {
   Future<void> saveNote({required String text}) async {
     final uid = uuid.v4();
     final createdAt = DateTime.now().millisecondsSinceEpoch;
-    final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
+    final userId = _firebaseAuth.currentUser?.uid;
     if (userId == null) {
       state = NeedLoginHomeListener();
       return;
@@ -52,7 +51,7 @@ abstract class _NoteDetailsControllerBase with Store {
     required NoteModel note,
   }) async {
     final updatedNote = NoteModel(uid: note.uid, text: newText, createdAt: note.createdAt, updatedCount: note.updatedCount + 1);
-    final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
+    final userId = _firebaseAuth.currentUser?.uid;
     if (userId == null) {
       state = NeedLoginHomeListener();
       return;
@@ -70,7 +69,7 @@ abstract class _NoteDetailsControllerBase with Store {
 
   @action
   Future<void> deleteNote({required String uidNote}) async {
-    final userId = _sharedPreferences.getString(AppSharedpreferencesKeys.userId);
+    final userId = _firebaseAuth.currentUser?.uid;
     final result = await _noteRepository.deleteNote(uidNote: uidNote, userId: userId!);
     result.fold(
       (l) {

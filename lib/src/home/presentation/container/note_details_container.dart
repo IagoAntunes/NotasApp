@@ -18,6 +18,25 @@ class NoteDetailsContainer extends StatelessWidget {
     required this.params,
   });
   final NoteDetailsParams params;
+  int calculateVisualLines({
+    required String text,
+    required TextStyle style,
+    required double maxWidth,
+  }) {
+    if (text.isEmpty) return 0;
+
+    final span = TextSpan(text: text, style: style);
+
+    final tp = TextPainter(
+      text: span,
+      textDirection: TextDirection.ltr,
+      maxLines: null,
+    );
+
+    tp.layout(maxWidth: maxWidth);
+
+    return tp.computeLineMetrics().length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,22 +75,26 @@ class NoteDetailsContainer extends StatelessWidget {
                 await controller.updateNote(newText: value, note: params.note!);
               }
             },
-            onTapStats: () {
+            onTapStats: (width) {
               int totalLines = 0;
-              int letters = 0;
-              int digits = 0;
 
-              if (params.note!.text.isNotEmpty) {
-                totalLines = '\n'.allMatches(params.note!.text).length + 1;
-              }
+              // if (params.note!.text.isNotEmpty) {
+              //   oldTotalLines = '\n'.allMatches(params.note!.text).length + 1;
+              // }
+              totalLines = calculateVisualLines(
+                maxWidth: width,
+                text: params.note!.text,
+                style: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  height: 1.5,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w400,
+                ),
+              );
+              final letters = RegExp(r'\p{L}', unicode: true).allMatches(params.note!.text).length;
 
-              for (final charCode in params.note!.text.codeUnits) {
-                if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) {
-                  letters++;
-                } else if (charCode >= 48 && charCode <= 57) {
-                  digits++;
-                }
-              }
+              final digits = RegExp(r'\p{N}', unicode: true).allMatches(params.note!.text).length;
 
               final statsData = NoteStatsData(
                 totalChars: params.note!.text.length,

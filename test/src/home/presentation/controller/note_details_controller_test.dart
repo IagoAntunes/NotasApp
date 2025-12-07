@@ -1,29 +1,32 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notes_app/core/utils/result_error.dart';
-import 'package:notes_app/services/database/keyvalue/app_sharedpreferences_keys.dart';
 import 'package:notes_app/shared/note/domain/repository/note_data_repository.dart';
 import 'package:notes_app/src/home/domain/models/note_model.dart';
 import 'package:notes_app/src/home/presentation/controller/note_details_controller.dart';
 import 'package:notes_app/src/home/presentation/states/note_details_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MockNoteDataRepository extends Mock implements INoteDataRepository {}
 
-class MockSharedPreferences extends Mock implements SharedPreferences {}
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
+class MockUser extends Mock implements User {}
 
 void main() {
   late NoteDetailsController controller;
   late MockNoteDataRepository mockNoteDataRepository;
-  late MockSharedPreferences mockSharedPreferences;
+  late MockFirebaseAuth mockFirebaseAuth;
+  late MockUser mockUser;
 
   setUp(() {
     mockNoteDataRepository = MockNoteDataRepository();
-    mockSharedPreferences = MockSharedPreferences();
+    mockFirebaseAuth = MockFirebaseAuth();
+    mockUser = MockUser();
     controller = NoteDetailsController(
       noteRepository: mockNoteDataRepository,
-      sharedPreferences: mockSharedPreferences,
+      firebaseAuth: mockFirebaseAuth,
     );
     registerFallbackValue(NoteModel(uid: '', text: '', updatedCount: 0, createdAt: 0));
   });
@@ -44,7 +47,8 @@ void main() {
 
     group('saveNote', () {
       test('should emit [NeedRebuildHomeListener] when success', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.createNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -54,7 +58,7 @@ void main() {
 
         await future;
         expect(controller.state, isA<NeedRebuildHomeListener>());
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.createNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -62,13 +66,13 @@ void main() {
       });
 
       test('should emit [NeedLoginHomeListener] when userId is null', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(null);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(null);
 
         final future = controller.saveNote(text: 'New Note');
 
         await future;
         expect(controller.state, isA<NeedLoginHomeListener>());
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verifyNever(() => mockNoteDataRepository.createNote(
               note: any(named: 'note'),
               userId: any(named: 'userId'),
@@ -76,7 +80,8 @@ void main() {
       });
 
       test('should emit [NoteDetailsErrorListener] when fails', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.createNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -87,7 +92,7 @@ void main() {
         await future;
         expect(controller.state, isA<NoteDetailsErrorListener>());
         expect((controller.state as NoteDetailsErrorListener).message, 'error message');
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.createNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -97,7 +102,8 @@ void main() {
 
     group('updateNote', () {
       test('should emit [NeedRebuildHomeListener] when success', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.updateNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -107,7 +113,7 @@ void main() {
 
         await future;
         expect(controller.state, isA<NeedRebuildHomeListener>());
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.updateNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -115,13 +121,13 @@ void main() {
       });
 
       test('should emit [NeedLoginHomeListener] when userId is null', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(null);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(null);
 
         final future = controller.updateNote(newText: 'Updated Note', note: tNote);
 
         await future;
         expect(controller.state, isA<NeedLoginHomeListener>());
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verifyNever(() => mockNoteDataRepository.updateNote(
               note: any(named: 'note'),
               userId: any(named: 'userId'),
@@ -129,7 +135,8 @@ void main() {
       });
 
       test('should emit [NoteDetailsErrorListener] when fails', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.updateNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -140,7 +147,7 @@ void main() {
         await future;
         expect(controller.state, isA<NoteDetailsErrorListener>());
         expect((controller.state as NoteDetailsErrorListener).message, 'error message');
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.updateNote(
               note: any(named: 'note'),
               userId: tUserId,
@@ -150,7 +157,8 @@ void main() {
 
     group('deleteNote', () {
       test('should emit [NeedRebuildHomeListener] when success', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.deleteNote(
               uidNote: tNote.uid,
               userId: tUserId,
@@ -160,7 +168,7 @@ void main() {
 
         await future;
         expect(controller.state, isA<NeedRebuildHomeListener>());
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.deleteNote(
               uidNote: tNote.uid,
               userId: tUserId,
@@ -168,7 +176,8 @@ void main() {
       });
 
       test('should emit [NoteDetailsErrorListener] when fails', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.deleteNote(
               uidNote: tNote.uid,
               userId: tUserId,
@@ -179,7 +188,7 @@ void main() {
         await future;
         expect(controller.state, isA<NoteDetailsErrorListener>());
         expect((controller.state as NoteDetailsErrorListener).message, 'error message');
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.deleteNote(
               uidNote: tNote.uid,
               userId: tUserId,

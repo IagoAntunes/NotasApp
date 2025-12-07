@@ -1,35 +1,38 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notes_app/core/utils/result_error.dart';
-import 'package:notes_app/services/database/keyvalue/app_sharedpreferences_keys.dart';
 import 'package:notes_app/shared/note/domain/repository/note_data_repository.dart';
 import 'package:notes_app/src/auh/domain/repository/auth_repository.dart';
 import 'package:notes_app/src/home/domain/models/note_model.dart';
 import 'package:notes_app/src/home/presentation/controller/home_controller.dart';
 import 'package:notes_app/src/home/presentation/states/home_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MockAuthRepository extends Mock implements IAuthRepository {}
 
 class MockNoteDataRepository extends Mock implements INoteDataRepository {}
 
-class MockSharedPreferences extends Mock implements SharedPreferences {}
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
+class MockUser extends Mock implements User {}
 
 void main() {
   late HomeController controller;
   late MockAuthRepository mockAuthRepository;
   late MockNoteDataRepository mockNoteDataRepository;
-  late MockSharedPreferences mockSharedPreferences;
+  late MockFirebaseAuth mockFirebaseAuth;
+  late MockUser mockUser;
 
   setUp(() {
     mockAuthRepository = MockAuthRepository();
     mockNoteDataRepository = MockNoteDataRepository();
-    mockSharedPreferences = MockSharedPreferences();
+    mockFirebaseAuth = MockFirebaseAuth();
+    mockUser = MockUser();
     controller = HomeController(
       authRepository: mockAuthRepository,
       userDataRepository: mockNoteDataRepository,
-      sharedPreferences: mockSharedPreferences,
+      firebaseAuth: mockFirebaseAuth,
     );
   });
 
@@ -49,7 +52,8 @@ void main() {
 
     group('fetchNotes', () {
       test('should emit [HomeLoading, HomeComplete] when success', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.getNotesByUser(userId: tUserId)).thenAnswer((_) async => Right([
               tNote
             ]));
@@ -62,12 +66,13 @@ void main() {
         expect((controller.state as HomeComplete).notes, [
           tNote
         ]);
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.getNotesByUser(userId: tUserId)).called(1);
       });
 
       test('should emit [HomeLoading, HomeErrorListener] when fails', () async {
-        when(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).thenReturn(tUserId);
+        when(() => mockFirebaseAuth.currentUser).thenReturn(mockUser);
+        when(() => mockUser.uid).thenReturn(tUserId);
         when(() => mockNoteDataRepository.getNotesByUser(userId: tUserId)).thenAnswer((_) async => Left(tError));
 
         final future = controller.fetchNotes();
@@ -76,7 +81,7 @@ void main() {
         await future;
         expect(controller.state, isA<HomeErrorListener>());
         expect((controller.state as HomeErrorListener).message, 'error message');
-        verify(() => mockSharedPreferences.getString(AppSharedpreferencesKeys.userId)).called(1);
+        verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.getNotesByUser(userId: tUserId)).called(1);
       });
     });
