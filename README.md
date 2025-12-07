@@ -2,6 +2,10 @@
 
 Este projeto é uma aplicação de gerenciamento de notas desenvolvida utilizando o framework **Flutter**. O objetivo é fornecer uma interface multiplataforma (Android e iOS) para criação e armazenamento de anotações, integrando serviços de backend e boas práticas de desenvolvimento.
 
+## :round_pushpin: Video
+
+https://github.com/user-attachments/assets/3c436474-e9fd-46b1-a9e1-4cd67059f186
+
 ## ✅ Como Validar o Projeto
 
 Para testar o funcionamento da aplicação, você possui duas opções:
