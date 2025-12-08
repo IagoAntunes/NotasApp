@@ -13,15 +13,18 @@ class NoteDataDatasourceImpl implements INoteDataDatasource {
   @override
   Future<Either<ResultError, List<NoteModel>>> getNotesByUser({required String userId}) async {
     try {
-      final result = await _firestore
-          .collection(AppFirestoreCollectionKeys.users)
-          .doc(userId)
-          .collection(AppFirestoreCollectionKeys.notes)
-          .orderBy(
+      final query = _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).orderBy(
             'createdAt',
             descending: false,
-          )
-          .get();
+          );
+
+      QuerySnapshot<Map<String, dynamic>> result;
+
+      try {
+        result = await query.get(const GetOptions(source: Source.server));
+      } catch (_) {
+        result = await query.get(const GetOptions(source: Source.cache));
+      }
 
       List<NoteModel> notes = [];
       for (var doc in result.docs) {
@@ -37,7 +40,14 @@ class NoteDataDatasourceImpl implements INoteDataDatasource {
   @override
   Future<Either<ResultError, bool>> createNote({required NoteModel note, required String userId}) async {
     try {
-      await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid).set(note.toMap());
+      final docRef = _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid);
+
+      await docRef.set(note.toMap()).timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          return;
+        },
+      );
 
       return Right(true);
     } catch (e) {
@@ -48,7 +58,14 @@ class NoteDataDatasourceImpl implements INoteDataDatasource {
   @override
   Future<Either<ResultError, bool>> updateNote({required NoteModel note, required String userId}) async {
     try {
-      await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid).set(note.toMap());
+      final docRef = _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(note.uid);
+
+      await docRef.update(note.toMap()).timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          return;
+        },
+      );
 
       return Right(true);
     } catch (e) {
@@ -59,7 +76,14 @@ class NoteDataDatasourceImpl implements INoteDataDatasource {
   @override
   Future<Either<ResultError, bool>> deleteNote({required String uidNote, required String userId}) async {
     try {
-      await _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(uidNote).delete();
+      final docRef = _firestore.collection(AppFirestoreCollectionKeys.users).doc(userId).collection(AppFirestoreCollectionKeys.notes).doc(uidNote);
+
+      await docRef.delete().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          return;
+        },
+      );
 
       return Right(true);
     } catch (e) {

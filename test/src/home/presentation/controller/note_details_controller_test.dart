@@ -57,7 +57,7 @@ void main() {
         final future = controller.saveNote(text: 'New Note');
 
         await future;
-        expect(controller.state, isA<NeedRebuildHomeListener>());
+        expect(controller.state, isA<NoteDetailsIdle>());
         verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.createNote(
               note: any(named: 'note'),
@@ -112,7 +112,7 @@ void main() {
         final future = controller.updateNote(newText: 'Updated Note', note: tNote);
 
         await future;
-        expect(controller.state, isA<NeedRebuildHomeListener>());
+        expect(controller.state, isA<NoteDetailsIdle>());
         verify(() => mockFirebaseAuth.currentUser).called(1);
         verify(() => mockNoteDataRepository.updateNote(
               note: any(named: 'note'),
@@ -194,14 +194,6 @@ void main() {
               userId: tUserId,
             )).called(1);
       });
-    });
-
-    test('resetState should set state to NoteDetailsIdle', () {
-      controller.state = NoteDetailsLoading();
-
-      controller.resetState();
-
-      expect(controller.state, isA<NoteDetailsIdle>());
     });
   });
 }

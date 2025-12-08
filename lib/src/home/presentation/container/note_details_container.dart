@@ -12,12 +12,27 @@ import '../../domain/models/note_details_params.dart';
 import '../screens/note_stats_screen.dart';
 import '../states/note_details_state.dart';
 
-class NoteDetailsContainer extends StatelessWidget {
+class NoteDetailsContainer extends StatefulWidget {
   const NoteDetailsContainer({
     super.key,
     required this.params,
   });
   final NoteDetailsParams params;
+
+  @override
+  State<NoteDetailsContainer> createState() => _NoteDetailsContainerState();
+}
+
+class _NoteDetailsContainerState extends State<NoteDetailsContainer> {
+  @override
+  void initState() {
+    super.initState();
+    controller.updatedCount = widget.params.note?.updatedCount ?? 0;
+    controller.note = widget.params.note;
+    controller.isCreating = widget.params.creating;
+    controller.indexNote = widget.params.index;
+  }
+
   int calculateVisualLines({
     required String text,
     required TextStyle style,
@@ -38,17 +53,18 @@ class NoteDetailsContainer extends StatelessWidget {
     return tp.computeLineMetrics().length;
   }
 
+  final controller = injector<NoteDetailsController>();
+
+  final authNotifier = injector<AuthNotifier>();
+
   @override
   Widget build(BuildContext context) {
-    final controller = injector<NoteDetailsController>();
-    final authNotifier = injector<AuthNotifier>();
-
     return MobxStateListener<INoteDetailsState>(
       getState: () => controller.state,
       listenWhen: (previous, current) => current is INoteDetailsListener,
       onListen: (context, state) {
         if (state is NeedRebuildHomeListener) {
-          if (context.mounted) context.pop(true);
+          if (context.mounted) return context.pop(true);
         }
         if (state is NoteDetailsErrorListener) {
           final snackBar = SnackBar(content: Text('Ocorreu um problema'));
@@ -60,56 +76,77 @@ class NoteDetailsContainer extends StatelessWidget {
       },
       child: Observer(
         builder: (_) {
-          return NoteDetailScreen(
-            backgroundColor: AppNoteColors.getColor(params.index).base,
-            content: params.note?.text ?? '',
-            index: params.index,
-            isCreating: params.creating,
-            onDelete: () {
-              controller.deleteNote(uidNote: params.note!.uid);
-            },
-            onSave: (value) async {
-              if (params.creating) {
-                await controller.saveNote(text: value);
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (didPop) return;
+              if (controller.state is NoteDetailsIdle) {
+                final idleState = controller.state as NoteDetailsIdle;
+                context.pop(idleState.needRebuildHome);
               } else {
-                await controller.updateNote(newText: value, note: params.note!);
+                context.pop(false);
               }
             },
-            onTapStats: (width) {
-              int totalLines = 0;
+            child: NoteDetailScreen(
+              backgroundColor: AppNoteColors.getColor(controller.indexNote).base,
+              content: controller.note?.text ?? '',
+              index: controller.indexNote,
+              isCreating: controller.isCreating,
+              isLoading: controller.state is NoteDetailsLoading,
+              onBack: () {
+                if (controller.state is NoteDetailsIdle) {
+                  final idleState = controller.state as NoteDetailsIdle;
+                  context.pop(idleState.needRebuildHome);
+                } else {
+                  context.pop(false);
+                }
+              },
+              onDelete: () {
+                controller.deleteNote(uidNote: controller.note!.uid);
+              },
+              onSave: (value) async {
+                if (controller.isCreating) {
+                  await controller.saveNote(text: value);
+                } else {
+                  await controller.updateNote(newText: value, note: controller.note!);
+                }
+              },
+              onTapStats: (width, text) {
+                int totalLines = 0;
 
-              // if (params.note!.text.isNotEmpty) {
-              //   oldTotalLines = '\n'.allMatches(params.note!.text).length + 1;
-              // }
-              totalLines = calculateVisualLines(
-                maxWidth: width,
-                text: params.note!.text,
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  height: 1.5,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w400,
-                ),
-              );
-              final letters = RegExp(r'\p{L}', unicode: true).allMatches(params.note!.text).length;
+                // if (params.note!.text.isNotEmpty) {
+                //   oldTotalLines = '\n'.allMatches(params.note!.text).length + 1;
+                // }
+                totalLines = calculateVisualLines(
+                  maxWidth: width,
+                  text: text,
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 18,
+                    height: 1.5,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w400,
+                  ),
+                );
+                final letters = RegExp(r'\p{L}', unicode: true).allMatches(text).length;
 
-              final digits = RegExp(r'\p{N}', unicode: true).allMatches(params.note!.text).length;
+                final digits = RegExp(r'\p{N}', unicode: true).allMatches(text).length;
 
-              final statsData = NoteStatsData(
-                totalChars: params.note!.text.length,
-                totalLines: totalLines,
-                letters: letters,
-                digits: digits,
-                totalEdits: params.note!.updatedCount,
-                index: params.index,
-              );
+                final statsData = NoteStatsData(
+                  totalChars: text.length,
+                  totalLines: totalLines,
+                  letters: letters,
+                  digits: digits,
+                  totalEdits: controller.updatedCount,
+                  index: controller.indexNote,
+                );
 
-              context.push(
-                AppRoutes.noteStats,
-                extra: statsData,
-              );
-            },
+                context.push(
+                  AppRoutes.noteStats,
+                  extra: statsData,
+                );
+              },
+            ),
           );
         },
       ),

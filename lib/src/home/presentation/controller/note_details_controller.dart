@@ -22,10 +22,17 @@ abstract class _NoteDetailsControllerBase with Store {
   final FirebaseAuth _firebaseAuth;
 
   @observable
-  INoteDetailsState state = NoteDetailsIdle();
+  INoteDetailsState state = NoteDetailsIdle(needRebuildHome: false);
+
+  int updatedCount = 0;
+
+  NoteModel? note;
+  bool isCreating = false;
+  int indexNote = 0;
 
   @action
   Future<void> saveNote({required String text}) async {
+    state = NoteDetailsLoading();
     final uid = uuid.v4();
     final createdAt = DateTime.now().millisecondsSinceEpoch;
     final userId = _firebaseAuth.currentUser?.uid;
@@ -40,7 +47,10 @@ abstract class _NoteDetailsControllerBase with Store {
         state = NoteDetailsErrorListener(l.message);
       },
       (r) {
-        state = NeedRebuildHomeListener();
+        note = newNote;
+        updatedCount = newNote.updatedCount;
+        isCreating = false;
+        state = NoteDetailsIdle(needRebuildHome: true);
       },
     );
   }
@@ -50,7 +60,8 @@ abstract class _NoteDetailsControllerBase with Store {
     required String newText,
     required NoteModel note,
   }) async {
-    final updatedNote = NoteModel(uid: note.uid, text: newText, createdAt: note.createdAt, updatedCount: note.updatedCount + 1);
+    state = NoteDetailsLoading();
+    final updatedNote = NoteModel(uid: note.uid, text: newText, createdAt: note.createdAt, updatedCount: updatedCount + 1);
     final userId = _firebaseAuth.currentUser?.uid;
     if (userId == null) {
       state = NeedLoginHomeListener();
@@ -62,13 +73,15 @@ abstract class _NoteDetailsControllerBase with Store {
         state = NoteDetailsErrorListener(l.message);
       },
       (r) async {
-        state = NeedRebuildHomeListener();
+        updatedCount = updatedNote.updatedCount;
+        state = NoteDetailsIdle(needRebuildHome: true);
       },
     );
   }
 
   @action
   Future<void> deleteNote({required String uidNote}) async {
+    state = NoteDetailsLoading();
     final userId = _firebaseAuth.currentUser?.uid;
     final result = await _noteRepository.deleteNote(uidNote: uidNote, userId: userId!);
     result.fold(
@@ -83,6 +96,6 @@ abstract class _NoteDetailsControllerBase with Store {
 
   @action
   void resetState() {
-    state = NoteDetailsIdle();
+    state = NoteDetailsIdle(needRebuildHome: false);
   }
 }

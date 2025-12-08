@@ -2,11 +2,12 @@ sealed class INoteDetailsState {}
 
 sealed class INoteDetailsListener extends INoteDetailsState {}
 
-class NoteDetailsIdle extends INoteDetailsState {}
-
 class NoteDetailsLoading extends INoteDetailsState {}
 
-class NoteDetailsComplete extends INoteDetailsState {}
+class NoteDetailsIdle extends INoteDetailsState {
+  NoteDetailsIdle({required this.needRebuildHome});
+  bool needRebuildHome = false;
+}
 
 class NoteDetailsErrorListener extends INoteDetailsListener {
   NoteDetailsErrorListener(this.message);
