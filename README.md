@@ -5,14 +5,36 @@ Este projeto é uma aplicação de gerenciamento de notas desenvolvida utilizand
 ## 📑 Índice
 
 * [📍 Vídeo](#-vídeo)
+* [✨ Funcionalidades](#-funcionalidades)
 * [✅ Como Validar o Projeto](#-como-validar-o-projeto)
 * [🛠 Tecnologias e Ferramentas](#-tecnologias-e-ferramentas)
 * [📂 Arquitetura e Estrutura de Pastas](#-arquitetura-e-estrutura-de-pastas)
 * [🚀 Como Executar o Projeto](#-como-executar-o-projeto)
 
+
 ## 📍 Vídeo
 
 https://github.com/user-attachments/assets/3c436474-e9fd-46b1-a9e1-4cd67059f186
+
+## ✨ Funcionalidades
+
+* **📱 Identidade Visual Personalizada:**
+    * **Ícone Adaptativo:** Ícone do aplicativo configurado para diferentes densidades e formatos de dispositivos Android e iOS.
+    * **Native Splash Screen:** Tela de abertura nativa configurada para uma experiência de inicialização fluida.
+
+* **🔐 Autenticação Robusta:**
+    * Login e Registro de usuários integrados ao **Firebase Auth**.
+    * **Validação de Formulários:** Feedback visual imediato para emails inválidos ou senhas fracas.
+    * Tratamento de erros amigável para o usuário.
+
+* **☁️ Gerenciamento de Notas (Offline-First):**
+    * **CRUD Completo:** Criação, leitura, atualização e exclusão de notas.
+    * **Sincronização Inteligente:** O app funciona perfeitamente sem internet. As alterações são salvas localmente (cache) e sincronizadas automaticamente com o Firestore assim que a conexão é restabelecida.
+    * **Otimistic UI:** A interface responde instantaneamente às ações do usuário, independente da latência da rede.
+
+* **📊 Análise e Estatísticas:**
+    * Visualização detalhada do conteúdo da nota através de gráficos.
+    * Contagem precisa de **caracteres**, **letras**, **números** e **linhas visuais** (simulação de renderização para contagem exata de quebras de linha na tela).
 
 ## ✅ Como Validar o Projeto
 
