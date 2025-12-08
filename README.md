@@ -2,7 +2,15 @@
 
 Este projeto é uma aplicação de gerenciamento de notas desenvolvida utilizando o framework **Flutter**. O objetivo é fornecer uma interface multiplataforma (Android e iOS) para criação e armazenamento de anotações, integrando serviços de backend e boas práticas de desenvolvimento.
 
-## :round_pushpin: Video
+## 📑 Índice
+
+* [📍 Vídeo](#-vídeo)
+* [✅ Como Validar o Projeto](#-como-validar-o-projeto)
+* [🛠 Tecnologias e Ferramentas](#-tecnologias-e-ferramentas)
+* [📂 Arquitetura e Estrutura de Pastas](#-arquitetura-e-estrutura-de-pastas)
+* [🚀 Como Executar o Projeto](#-como-executar-o-projeto)
+
+## 📍 Vídeo
 
 https://github.com/user-attachments/assets/3c436474-e9fd-46b1-a9e1-4cd67059f186
 
@@ -10,45 +18,82 @@ https://github.com/user-attachments/assets/3c436474-e9fd-46b1-a9e1-4cd67059f186
 
 Para testar o funcionamento da aplicação, você possui duas opções:
 
+````
+email: admin@gmail.com
+password: admin123
+````
 ### Opção 1: Instalação via APK (Rápido)
 A maneira mais simples de visualizar o projeto rodando em um dispositivo Android, sem necessidade de configurar o ambiente de desenvolvimento:
 
-1.  Acesse a aba **[Releases](../../releases)** deste repositório (na barra lateral direita do GitHub).
-2.  Localize a versão mais recente (tag `Latest`).
-3.  Baixe o arquivo `app-release.apk` nos "Assets".
-4.  Instale o arquivo em seu dispositivo Android.
+1. Acesse a aba **Releases** deste repositório.
+2. Localize a versão mais recente (tag `Latest`).
+3. Baixe o arquivo `app-release.apk` nos "Assets".
+4. Instale o arquivo em seu dispositivo Android.
 
 ### Opção 2: Compilação via Código Fonte
 Caso queira analisar o código, debugar ou rodar em um simulador iOS:
 
-1.  Siga as instruções detalhadas na seção **"🚀 Como Executar o Projeto"** abaixo.
+1. Siga as instruções detalhadas na seção **"🚀 Como Executar o Projeto"** abaixo.
 
 ## 🛠 Tecnologias e Ferramentas
 
-O projeto foi construído utilizando as seguintes tecnologias baseadas na estrutura do repositório:
+O projeto foi construído utilizando as seguintes tecnologias:
 
-*   **Linguagem:** [Dart](https://dart.dev/)
-*   **Framework:** [Flutter](https://flutter.dev/)
-*   **Backend/Infraestrutura:** [Firebase](https://firebase.google.com/) (identificado pelo arquivo `firebase.json`).
-
-*   **Gerenciamento de Estado:** [Mobx](https://pub.dev/packages/mobx)
-*   **Navegação:** [GoRouter](https://pub.dev/packages/go_router)
-*   **Armazenamento:** [SharedPreferences](https://pub.dev/packages/shared_preferences)
-
+* **Linguagem:** [Dart](https://dart.dev/)
+* **Framework:** [Flutter](https://flutter.dev/)
+* **Backend/Infraestrutura:** [Firebase](https://firebase.google.com/)
+* **Gerenciamento de Estado:** [MobX](https://pub.dev/packages/mobx)
+* **Navegação:** [GoRouter](https://pub.dev/packages/go_router)
+* **Injeção de Dependência:** [GetIt](https://pub.dev/packages/get_it)
+* **Armazenamento:** [SharedPreferences](https://pub.dev/packages/shared_preferences)
+* **Mock:** [Mocktail](https://pub.dev/packages/mocktail)
 
 ## 📂 Arquitetura e Estrutura de Pastas
 
-A estrutura do projeto segue os padrões do Flutter, organizada da seguinte forma:
-
-*   **`lib/`**: Contém o código-fonte principal da aplicação (Dart). É aqui que residem as camadas de UI, lógica de negócios e integração de dados.
-*   **`test/`**: Contém os testes automatizados (Unitários e de Widget) para garantir a estabilidade das funcionalidades.
-*   **`assets/`**: Diretório dedicado a recursos estáticos como imagens, fontes e arquivos de configuração locais.
-*   **`android/` & `ios/`**: Pastas contendo o código nativo e configurações específicas para cada plataforma móvel.
-
-*   **`controller/`**: Esta é a camada que conversa diretamente com a Interface (Tela). Dependendo da arquitetura, pode ser chamada de ViewModel, Bloc, ou Store.
-*   **`repository/`**: Esta é a camada de decisão e proteção. Ela serve como um "escudo" para o resto do aplicativo e é onde reside o contrato de dados.
-*   **`datasource/`**: Esta é a camada mais "externa" e técnica. Ela não sabe nada sobre regras de negócio; ela apenas sabe como buscar dados.
-
+````
+lib/
+├── core/                         # Configurações centrais e utilitários
+│   ├── di/                       # Injeção de dependência
+│   ├── router/                   # Configuração de rotas e navegação
+│   ├── styles/                   # Estilos, temas e cores globais
+│   ├── utils/                    # Funções utilitárias e helpers
+│   └── widgets/                  # Widgets core/básicos da aplicação
+│
+├── services/                     # Serviços de terceiros e infraestrutura
+│   ├── database/                 # Configuração de banco de dados
+│   └── stateManager/             # Gerenciamento de estado MOBX
+│
+├── shared/                       # Módulos ou entidades compartilhadas
+│   └── note/                     # Recurso de "Notas" compartilhado
+│       ├── domain/
+│       ├── external/
+│       └── infra/
+│
+└── src/                          # Funcionalidades principais (Features)
+    ├── auth/                     # Módulo de Autenticação
+    │   ├── domain/               # Regras de negócio
+    │   │   ├── models/           # Entidades
+    │   │   └── repository/       # Contratos/Interfaces dos repositórios
+    │   ├── external/             # Fontes de dados externas
+    │   │   └── datasource/       # Implementação das datasources
+    │   ├── infra/                # Camada de adaptação
+    │   │   ├── datasource/       # Contratos das datasources
+    │   │   └── repository/       # Implementação dos repositórios
+    │   └── presentation/         # Camada de visualização
+    │       ├── container/        # Injeção de dependências da tela
+    │       ├── controller/       # Lógica de controle da tela
+    │       ├── screens/          # As telas (UI)
+    │       └── states/           # Estados da tela
+    │
+    └── home/                     # Módulo Home
+        ├── domain/
+        │   └── models/
+        └── presentation/
+            ├── container/
+            ├── controller/
+            ├── screens/
+            └── states/
+````
 
 ## 🚀 Como Executar o Projeto
 
@@ -58,21 +103,21 @@ Certifique-se de ter o [Flutter SDK](https://docs.flutter.dev/get-started/instal
 
 ### Passos para Instalação
 
-1.  **Clone o repositório:**
+1. **Clone o repositório:**
     ```bash
     git clone <url-do-repositorio>
     cd notes_app
     ```
 
-2.  **Instale as dependências:**
+2. **Instale as dependências:**
     ```bash
     flutter pub get
     ```
 
-3.  **Configuração do Firebase:**
-    Como o projeto utiliza Firebase, certifique-se de que suas credenciais e arquivos de configuração (como `google-services.json` para Android e `GoogleService-Info.plist` para iOS) estejam configurados corretamente nas pastas nativas, caso não estejam versionados.
+3. **Configuração do Firebase:**
+    Caso as configurações atuais não funcionem, é preciso adicionar seus proprios arquivos `google-services.json` (Android) e `GoogleService-Info.plist` (iOS).
 
-4.  **Execute a aplicação:**
+5. **Execute a aplicação:**
     ```bash
     flutter run
     ```
